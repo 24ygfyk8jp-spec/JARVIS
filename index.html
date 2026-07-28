@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S.</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="jarvis-core">
+    <div class="energy-field"></div>
+
+    <div class="orbital orbital-1">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="orbital orbital-2">
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="orbital orbital-3">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="core-glow">
+        <div class="core-light"></div>
+    </div>
+
+    <div class="particles">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+    </div>
+</div>
+    <p id="status">JARVIS wartet...</p>
+	<h1>J.A.R.V.I.S.</h1>
+
+    <p>Wie kann ich dir helfen?</p>
+
+ <button onclick="activateJarvis()">JARVIS aktivieren</button>
+<script>
+    window.addEventListener("load", function() {
+        recognition.start();
+    });
+</script>
+<script src="script.js"></script>
+</body>
+</html>
