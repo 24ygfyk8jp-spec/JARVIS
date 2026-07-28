@@ -1,0 +1,469 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background: #05070d;
+    color: #dffcff;
+
+    font-family: Arial, sans-serif;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+}
+
+h1 {
+    font-size: 42px;
+    letter-spacing: 8px;
+}
+
+p {
+    font-size: 18px;
+}
+
+button {
+    margin-top: 25px;
+    padding: 14px 28px;
+
+    background: transparent;
+    color: #dffcff;
+
+    border: 1px solid #6ee7f9;
+    border-radius: 8px;
+
+    font-size: 16px;
+}
+.jarvis-core {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.core-center {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle,
+        #ffffff 0%,
+        #9ffaff 25%,
+        #24d9ff 55%,
+        transparent 75%
+    );
+
+    box-shadow:
+        0 0 20px #24d9ff,
+        0 0 50px #24d9ff,
+        0 0 100px #24d9ff;
+
+    animation: corePulse 2s infinite ease-in-out;
+}
+
+.core-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    border: 1px solid #24d9ff;
+    border-radius: 50%;
+
+    box-shadow: 0 0 15px #24d9ff;
+
+    opacity: 0.7;
+}
+
+.ring-1 {
+    animation: rotateClockwise 8s linear infinite;
+}
+
+.ring-2 {
+    width: 75%;
+    height: 75%;
+    animation: rotateCounter 5s linear infinite;
+}
+
+.ring-3 {
+    width: 50%;
+    height: 50%;
+    animation: rotateClockwise 3s linear infinite;
+}
+
+@keyframes corePulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+}
+
+@keyframes rotateClockwise {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateCounter {
+    from {
+        transform: rotate(360deg);
+    }
+
+    to {
+        transform: rotate(0deg);
+    }
+}
+/* JARVIS HOLOGRAPHIC CORE */
+
+.jarvis-core {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 20px auto 40px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    perspective: 900px;
+}
+
+/* Lichtfeld hinter dem Kern */
+
+.energy-field {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle,
+        rgba(190, 255, 255, 0.9) 0%,
+        rgba(40, 220, 255, 0.45) 20%,
+        rgba(20, 150, 255, 0.15) 45%,
+        transparent 72%
+    );
+
+    filter: blur(8px);
+
+    animation: energyPulse 2.4s ease-in-out infinite;
+}
+
+/* Zentraler Lichtkern */
+
+.core-glow {
+    position: absolute;
+
+    width: 82px;
+    height: 82px;
+
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: radial-gradient(
+        circle,
+        white 0%,
+        #b9ffff 18%,
+        #32e5ff 40%,
+        rgba(20, 180, 255, 0.15) 70%,
+        transparent 100%
+    );
+
+    box-shadow:
+        0 0 15px #b9ffff,
+        0 0 35px #32e5ff,
+        0 0 75px rgba(30, 210, 255, 0.8),
+        0 0 120px rgba(30, 170, 255, 0.4);
+
+    animation: coreBreathing 2s ease-in-out infinite;
+}
+
+.core-light {
+    width: 22px;
+    height: 22px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        0 0 10px white,
+        0 0 25px #b9ffff,
+        0 0 50px #32e5ff;
+
+    animation: innerPulse 1.3s ease-in-out infinite;
+}
+
+/* Äußere Orbital-Systeme */
+
+.orbital {
+    position: absolute;
+
+    border: 1px solid rgba(100, 235, 255, 0.75);
+
+    border-radius: 50%;
+
+    transform-style: preserve-3d;
+
+    box-shadow:
+        0 0 8px rgba(60, 220, 255, 0.4);
+}
+
+.orbital span {
+    position: absolute;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #dfffff;
+
+    box-shadow:
+        0 0 8px #dfffff,
+        0 0 18px #31ddff;
+}
+
+/* Orbital 1 */
+
+.orbital-1 {
+    width: 205px;
+    height: 205px;
+
+    transform: rotateX(68deg) rotateZ(15deg);
+
+    animation: orbitOne 8s linear infinite;
+}
+
+.orbital-1 span:nth-child(1) {
+    top: -4px;
+    left: 50%;
+}
+
+.orbital-1 span:nth-child(2) {
+    bottom: 25px;
+    right: 8px;
+}
+
+.orbital-1 span:nth-child(3) {
+    bottom: 20px;
+    left: 20px;
+}
+
+/* Orbital 2 */
+
+.orbital-2 {
+    width: 245px;
+    height: 125px;
+
+    transform: rotateY(68deg) rotateZ(-25deg);
+
+    border-style: dashed;
+
+    opacity: 0.75;
+
+    animation: orbitTwo 6s linear infinite reverse;
+}
+
+.orbital-2 span:nth-child(1) {
+    top: 50%;
+    left: -4px;
+}
+
+.orbital-2 span:nth-child(2) {
+    top: 50%;
+    right: -4px;
+}
+
+/* Orbital 3 */
+
+.orbital-3 {
+    width: 270px;
+    height: 270px;
+
+    transform: rotateX(62deg) rotateY(20deg);
+
+    border-color: rgba(70, 210, 255, 0.3);
+
+    animation: orbitThree 13s linear infinite;
+}
+
+.orbital-3 span:nth-child(1) {
+    top: 12px;
+    left: 50%;
+}
+
+.orbital-3 span:nth-child(2) {
+    top: 50%;
+    right: 10px;
+}
+
+.orbital-3 span:nth-child(3) {
+    bottom: 12px;
+    left: 50%;
+}
+
+.orbital-3 span:nth-child(4) {
+    top: 50%;
+    left: 10px;
+}
+
+/* Partikel */
+
+.particles {
+    position: absolute;
+
+    width: 280px;
+    height: 280px;
+
+    animation: particleRotation 20s linear infinite;
+}
+
+.particles i {
+    position: absolute;
+
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: #cfffff;
+
+    box-shadow:
+        0 0 8px #cfffff,
+        0 0 15px #2ddcff;
+}
+
+.particles i:nth-child(1) {
+    top: 12%;
+    left: 28%;
+}
+
+.particles i:nth-child(2) {
+    top: 25%;
+    right: 12%;
+}
+
+.particles i:nth-child(3) {
+    top: 65%;
+    right: 8%;
+}
+
+.particles i:nth-child(4) {
+    bottom: 10%;
+    left: 35%;
+}
+
+.particles i:nth-child(5) {
+    bottom: 25%;
+    left: 8%;
+}
+
+.particles i:nth-child(6) {
+    top: 42%;
+    left: 3%;
+}
+
+.particles i:nth-child(7) {
+    top: 5%;
+    right: 40%;
+}
+
+.particles i:nth-child(8) {
+    bottom: 5%;
+    right: 30%;
+}
+
+/* Animationen */
+
+@keyframes coreBreathing {
+    0%, 100% {
+        transform: scale(0.9);
+        opacity: 0.75;
+    }
+
+    50% {
+        transform: scale(1.12);
+        opacity: 1;
+    }
+}
+
+@keyframes innerPulse {
+    0%, 100% {
+        transform: scale(0.8);
+    }
+
+    50% {
+        transform: scale(1.25);
+    }
+}
+
+@keyframes energyPulse {
+    0%, 100% {
+        transform: scale(0.8);
+        opacity: 0.35;
+    }
+
+    50% {
+        transform: scale(1.25);
+        opacity: 0.85;
+    }
+}
+
+@keyframes orbitOne {
+    from {
+        transform: rotateX(68deg) rotateZ(0deg);
+    }
+
+    to {
+        transform: rotateX(68deg) rotateZ(360deg);
+    }
+}
+
+@keyframes orbitTwo {
+    from {
+        transform: rotateY(68deg) rotateZ(0deg);
+    }
+
+    to {
+        transform: rotateY(68deg) rotateZ(360deg);
+    }
+}
+
+@keyframes orbitThree {
+    from {
+        transform: rotateX(62deg) rotateY(20deg) rotateZ(0deg);
+    }
+
+    to {
+        transform: rotateX(62deg) rotateY(20deg) rotateZ(360deg);
+    }
+}
+
+@keyframes particleRotation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
