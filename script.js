@@ -87,3 +87,26 @@ function jarvisSpeak(text) {
     window.speechSynthesis.speak(speech);
   }
 }
+function jarvisSpeak(text) {
+  if ('speechSynthesis' in window) {
+    // 1. Laufende Sprachausgaben stoppen
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "de-DE";
+    speech.rate = 1.0;
+    speech.pitch = 0.9;
+
+    // 2. Verfügbare deutsche Stimmen im Browser suchen (Wichtig für iOS/Safari)
+    const voices = window.speechSynthesis.getVoices();
+    const germanVoice = voices.find(v => v.lang.includes("de"));
+    if (germanVoice) {
+      speech.voice = germanVoice;
+    }
+
+    // 3. Sprache abspielen
+    window.speechSynthesis.speak(speech);
+  } else {
+    console.log("Sprachausgabe wird vom Browser nicht unterstützt.");
+  }
+}
