@@ -1,25 +1,13 @@
-// HTML-Button erstellen, um Audio/Mikrofon auf iPads/iPhones freizuschalten
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.createElement("button");
-  btn.innerText = "JARVIS System Starten";
-  btn.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; padding:12px 24px; background:#00d2ff; color:#000; border:none; border-radius:8px; font-weight:bold; font-size:16px;";
-  document.body.appendChild(btn);
+// Funktion, um deine heruntergeladene MP3-Datei abzuspielen
+function spieleAudio(dateiName) {
+  const audio = new Audio(dateiName);
+  audio.play().catch(e => console.log("Audio konnte nicht abgespielt werden:", e));
+}
 
-  btn.addEventListener("click", () => {
-    jarvisSpeak("Systeme online.");
-    initJarvis();
-    btn.remove();
-  });
-});
+// Spracherkennung starten
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-function initJarvis() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    alert("Spracherkennung wird von diesem Browser nicht unterstützt. Bitte nutze Safari.");
-    return;
-  }
-
+if (SpeechRecognition) {
   const recognition = new SpeechRecognition();
   recognition.lang = "de-DE";
   recognition.continuous = true;
@@ -31,12 +19,14 @@ function initJarvis() {
     const text = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
     console.log("JARVIS hört:", text);
 
-    // 1. Aktivierung
+    // 1. Aktivierung: Spielt deine 'aktiviert.mp3' ab!
     if (text.includes("hey jarvis") || text.includes("jarvis")) {
       istAktiv = true;
       const statusEl = document.querySelector("#status");
       if (statusEl) statusEl.textContent = "JARVIS wurde aktiviert";
-      jarvisSpeak("Ich bin bereit.");
+      
+      // Hier spielt er deine echte ElevenLabs-Stimme ab:
+      spieleAudio("aktiviert.mp3");
       return;
     }
 
@@ -45,68 +35,28 @@ function initJarvis() {
       if (text.includes("suche nach") || text.includes("google nach")) {
         let query = text.replace("suche nach", "").replace("google nach", "").trim();
         if (query) {
-          jarvisSpeak("Suche nach " + query);
           window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
         }
       } 
       else if (text.includes("uhrzeit") || text.includes("wie viel uhr")) {
-        const zeit = new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
-        jarvisSpeak("Es ist " + zeit + " Uhr.");
+        const jetzt = new Date();
+        const zeit = jetzt.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+        const speech = new SpeechSynthesisUtterance("Es ist " + zeit + " Uhr.");
+        speech.lang = "de-DE";
+        window.speechSynthesis.speak(speech);
       }
       else if (text.includes("öffne youtube")) {
-        jarvisSpeak("Öffne YouTube.");
         window.location.href = "https://www.youtube.com";
       }
       else if (text.includes("stopp") || text.includes("schlafen")) {
         istAktiv = false;
         const statusEl = document.querySelector("#status");
         if (statusEl) statusEl.textContent = "JARVIS wartet...";
-        jarvisSpeak("Standby Modus.");
       }
     }
   };
 
-  recognition.onerror = function(e) {
-    console.log("Fehler:", e.error);
-  };
-
-  recognition.onend = function() {
-    recognition.start();
-  };
-
+  recognition.onerror = function(e) { console.log("Fehler:", e.error); };
+  recognition.onend = function() { recognition.start(); };
   recognition.start();
-}
-
-function jarvisSpeak(text) {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "de-DE";
-    speech.rate = 1.0;
-    speech.pitch = 0.9;
-    window.speechSynthesis.speak(speech);
-  }
-}
-function jarvisSpeak(text) {
-  if ('speechSynthesis' in window) {
-    // 1. Laufende Sprachausgaben stoppen
-    window.speechSynthesis.cancel();
-
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "de-DE";
-    speech.rate = 1.0;
-    speech.pitch = 0.9;
-
-    // 2. Verfügbare deutsche Stimmen im Browser suchen (Wichtig für iOS/Safari)
-    const voices = window.speechSynthesis.getVoices();
-    const germanVoice = voices.find(v => v.lang.includes("de"));
-    if (germanVoice) {
-      speech.voice = germanVoice;
-    }
-
-    // 3. Sprache abspielen
-    window.speechSynthesis.speak(speech);
-  } else {
-    console.log("Sprachausgabe wird vom Browser nicht unterstützt.");
-  }
 }
