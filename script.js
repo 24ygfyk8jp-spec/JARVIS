@@ -1,9 +1,26 @@
-// Spracherkennung initialisieren
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+// HTML-Button erstellen, um Audio/Mikrofon auf iPads/iPhones freizuschalten
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.createElement("button");
+  btn.innerText = "JARVIS System Starten";
+  btn.style.cssText = "position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:9999; padding:12px 24px; background:#00d2ff; color:#000; border:none; border-radius:8px; font-weight:bold; font-size:16px;";
+  document.body.appendChild(btn);
 
-if (SpeechRecognition) {
+  btn.addEventListener("click", () => {
+    jarvisSpeak("Systeme online.");
+    initJarvis();
+    btn.remove();
+  });
+});
+
+function initJarvis() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Spracherkennung wird von diesem Browser nicht unterstützt. Bitte nutze Safari.");
+    return;
+  }
+
   const recognition = new SpeechRecognition();
-  
   recognition.lang = "de-DE";
   recognition.continuous = true;
   recognition.interimResults = false;
@@ -11,57 +28,46 @@ if (SpeechRecognition) {
   let istAktiv = false;
 
   recognition.onresult = function(event) {
-    const text = event.results[event.results.length - 1][0].transcript.toLowerCase();
+    const text = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
     console.log("JARVIS hört:", text);
 
     // 1. Aktivierung
     if (text.includes("hey jarvis") || text.includes("jarvis")) {
       istAktiv = true;
-      document.querySelector("#status").textContent = "JARVIS wurde aktiviert";
-      jarvisSpeak("Ich bin bereit. Was kann ich für dich tun?");
+      const statusEl = document.querySelector("#status");
+      if (statusEl) statusEl.textContent = "JARVIS wurde aktiviert";
+      jarvisSpeak("Ich bin bereit.");
       return;
     }
 
-    // 2. Befehle nur ausführen, wenn aktiv
-    if (istAktiv) {      
-      // Befehl: Google Suche
+    // 2. Befehle ausführen
+    if (istAktiv) {
       if (text.includes("suche nach") || text.includes("google nach")) {
-        let suchbegriff = "";
-        if (text.includes("suche nach")) {
-          suchbegriff = text.split("suche nach")[1].trim();
-        } else if (text.includes("google nach")) {
-          suchbegriff = text.split("google nach")[1].trim();
-        }
-
-        if (suchbegriff.length > 0) {
-          jarvisSpeak("Ich suche auf Google nach " + suchbegriff);
-          window.open("https://www.google.com/search?q=" + encodeURIComponent(suchbegriff), "_blank");
+        let query = text.replace("suche nach", "").replace("google nach", "").trim();
+        if (query) {
+          jarvisSpeak("Suche nach " + query);
+          window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
         }
       } 
-      
-      // Befehl: Uhrzeit
       else if (text.includes("uhrzeit") || text.includes("wie viel uhr")) {
         const zeit = new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
         jarvisSpeak("Es ist " + zeit + " Uhr.");
       }
-
-      // Befehl: YouTube öffnen
       else if (text.includes("öffne youtube")) {
         jarvisSpeak("Öffne YouTube.");
-        window.open("https://www.youtube.com", "_blank");
+        window.location.href = "https://www.youtube.com";
       }
-
-      // Befehl: Deaktivieren
       else if (text.includes("stopp") || text.includes("schlafen")) {
         istAktiv = false;
-        document.querySelector("#status").textContent = "JARVIS wartet...";
-        jarvisSpeak("JARVIS geht in den Standby-Modus.");
+        const statusEl = document.querySelector("#status");
+        if (statusEl) statusEl.textContent = "JARVIS wartet...";
+        jarvisSpeak("Standby Modus.");
       }
     }
   };
 
-  recognition.onerror = function(event) {
-    console.log("Spracherkennung:", event.error);
+  recognition.onerror = function(e) {
+    console.log("Fehler:", e.error);
   };
 
   recognition.onend = function() {
@@ -69,17 +75,14 @@ if (SpeechRecognition) {
   };
 
   recognition.start();
-} else {
-  console.log("Spracherkennung wird nicht unterstützt.");
 }
 
-// Hilfsfunktion für die Sprachausgabe (Text-to-Speech)
 function jarvisSpeak(text) {
   if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel(); // Laufende Sprachausgaben stoppen
+    window.speechSynthesis.cancel();
     const speech = new SpeechSynthesisUtterance(text);
     speech.lang = "de-DE";
-    speech.rate = 1;
+    speech.rate = 1.0;
     speech.pitch = 0.9;
     window.speechSynthesis.speak(speech);
   }
