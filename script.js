@@ -1,30 +1,27 @@
-// Funktion zum Abspielen von Audio-Dateien (z. B. deine ElevenLabs MP3)
+// Hilfsfunktion zum Abspielen deiner ElevenLabs-MP3s
 function spieleAudio(dateiName) {
-  // Stoppt eventuelle Browser-Sprachausgaben
+  // Stoppt eventuelle Sprachausgaben
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
   }
 
-  // Versucht die MP3-Datei aus dem selben Ordner zu laden
   const audio = new Audio(dateiName);
 
   audio.play().then(() => {
-    console.log("Audio erfolgreich abgespielt:", dateiName);
+    console.log("ElevenLabs Audio abgespielt:", dateiName);
   }).catch(e => {
-    console.log("MP3 konnte nicht geladen werden, nutze Browser-Stimme als Backup:", e);
-    // Backup: Falls die MP3-Datei nicht auf GitHub liegt oder falsch heißt
-    const speech = new SpeechSynthesisUtterance("Ich bin bereit. Was kann ich für dich tun?");
-    speech.lang = "de-DE";
-    speech.pitch = 0.6;
-    speech.rate = 0.9;
-    window.speechSynthesis.speak(speech);
+    console.log("Audio-Fehler:", e);
+    const statusEl = document.querySelector("#status");
+    if (statusEl) statusEl.textContent = "FEHLER: 'aktiviert.mp3' NICHT GEFUNDEN";
   });
 }
 
-// Spracherkennung initialisieren
+// Spracherkennung für Browser (Safari/Chrome)
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-if (SpeechRecognition) {
+if (!SpeechRecognition) {
+  alert("Spracherkennung wird von diesem Browser nicht unterstützt. Bitte Safari nutzen!");
+} else {
   const recognition = new SpeechRecognition();
   recognition.lang = "de-DE";
   recognition.continuous = true;
@@ -32,51 +29,63 @@ if (SpeechRecognition) {
 
   let istAktiv = false;
 
+  // Zeigt an, dass das System bereit ist
+  recognition.onstart = function() {
+    const statusEl = document.querySelector("#status");
+    if (statusEl) statusEl.textContent = "SYSTEM ONLINE. WARTEN AUF BEFEHL...";
+  };
+
+  // Verarbeitet die gesprochenen Worte
   recognition.onresult = function(event) {
     const text = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
-    console.log("JARVIS hört:", text);
+    console.log("Erkannt:", text);
 
     const statusEl = document.querySelector("#status");
 
-    // 1. Aktivierung
+    // 1. Aktivierung durch "Hey Jarvis"
     if (text.includes("hey jarvis") || text.includes("jarvis")) {
       istAktiv = true;
-      if (statusEl) statusEl.textContent = "JARVIS wurde aktiviert";
+      if (statusEl) statusEl.textContent = "JARVIS AKTIV";
       
-      // Spielt deine hochgeladene aktiviert.mp3 ab
+      // Spielt DEINE hochgeladene ElevenLabs-Datei ab!
       spieleAudio("aktiviert.mp3");
       return;
     }
 
-    // 2. Befehle nur ausführen, wenn JARVIS aktiv ist
+    // 2. Befehle nur verarbeiten, wenn JARVIS vorher aktiviert wurde
     if (istAktiv) {
+      
       // Google-Suche
       if (text.includes("suche nach") || text.includes("google nach")) {
         let query = text.replace("suche nach", "").replace("google nach", "").trim();
         if (query) {
-          if (statusEl) statusEl.textContent = "Suche nach: " + query;
-          window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
+          if (statusEl) statusEl.textContent = "SUCHE: " + query.toUpperCase();
+          setTimeout(() => {
+            window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
+          }, 1000);
         }
       } 
       // YouTube öffnen
       else if (text.includes("öffne youtube") || text.includes("youtube")) {
-        if (statusEl) statusEl.textContent = "Öffne YouTube...";
-        window.location.href = "https://www.youtube.com";
+        if (statusEl) statusEl.textContent = "ÖFFNE YOUTUBE...";
+        setTimeout(() => {
+          window.location.href = "https://www.youtube.com";
+        }, 1000);
       }
-      // Uhrzeit ansagen
-      else if (text.includes("uhrzeit") || text.includes("wie viel uhr")) {
-        const jetzt = new Date();
-        const zeit = jetzt.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
-        const speech = new SpeechSynthesisUtterance("Es ist " + zeit + " Uhr.");
-        speech.lang = "de-DE";
-        speech.pitch = 0.6;
-        window.speechSynthesis.speak(speech);
-      }
-      // Standby / Stopp
+      // Standby
       else if (text.includes("stopp") || text.includes("schlafen") || text.includes("beenden")) {
         istAktiv = false;
-        if (statusEl) statusEl.textContent = "JARVIS wartet...";
+        if (statusEl) statusEl.textContent = "STANDBY-MODUS";
       }
+    }
+  };
+
+  // Startet das Mikrofon automatisch neu, wenn Safari es stoppt
+  recognition.onend = function() {
+    try {
+      recognition.start();
+    } catch (e) {
+      console.log("Neustart-Fehler:", e);
     }
   };
 
@@ -84,16 +93,6 @@ if (SpeechRecognition) {
     console.log("Erkennungs-Fehler:", e.error);
   };
 
-  recognition.onend = function() {
-    // Startet die Spracherkennung automatisch neu, falls sie stoppt
-    recognition.start();
-  };
-
-  // Spracherkennung starten
+  // Spracherkennung aktivieren
   recognition.start();
-
-} else {
-  alert("Dein Browser unterstützt keine Spracherkennung. Bitte nutze Safari auf dem iPad.");
 }
-spieleAudio("aktiviert.mp3.mp3");
-
