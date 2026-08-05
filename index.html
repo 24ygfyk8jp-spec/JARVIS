@@ -45,16 +45,84 @@
     </div>
 </div>
     <p id="status">JARVIS wartet...</p>
-	<h1>J.A.R.V.I.S.</h1>
+	
 
-    <p>Wie kann ich dir helfen?</p>
+   
 
- <button onclick="activateJarvis()">JARVIS aktivieren</button>
+ 
 <script>
     window.addEventListener("load", function() {
         recognition.start();
     });
 </script>
 <script src="script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS</title>
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #58a6ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .jarvis-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(56, 139, 253, 0.2);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    #status {
+      font-size: 1.2rem;
+      color: #8b949e;
+      margin-top: 15px;
+    }
+
+    .arc-reactor {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px solid #58a6ff;
+      box-shadow: 0 0 20px #58a6ff, inset 0 0 20px #58a6ff;
+      margin: 20px auto;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 30px #58a6ff, inset 0 0 30px #58a6ff; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="jarvis-card">
+    <h1>J.A.R.V.I.S.</h1>
+    <div class="arc-reactor"></div>
+    <div id="status">Tippe einmal auf den Bildschirm & sag "Hey Jarvis"</div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
