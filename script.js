@@ -95,4 +95,5 @@ if (SpeechRecognition) {
 } else {
   alert("Dein Browser unterstützt keine Spracherkennung. Bitte nutze Safari auf dem iPad.");
 }
+spieleAudio("aktiviert.mp3.mp3");
 
